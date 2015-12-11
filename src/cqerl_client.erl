@@ -659,7 +659,7 @@ remove_user(Ref, State=#client_state{users=Users, queued=Queue0, queries=Queries
 maybe_set_keyspace(State=#client_state{keyspace=undefined}) ->
     {live, switch_to_live_state(State)};
 maybe_set_keyspace(State=#client_state{keyspace=Keyspace}) ->
-    KeyspaceName = atom_to_binary(Keyspace, latin1),
+    KeyspaceName = atom_to_binary(Keyspace, utf8),
     BaseFrame = base_frame(State),
     {ok, Frame} = cqerl_protocol:query_frame(BaseFrame,
         #cqerl_query_parameters{},
@@ -752,7 +752,7 @@ signal_alive(Inet, Keyspace) ->
 
 
 choose_compression_type({'COMPRESSION', Choice}) ->
-    SupportedCompression = lists:map(fun (CompressionNameBin) -> binary_to_atom(CompressionNameBin, latin1) end, Choice),
+    SupportedCompression = lists:map(fun (CompressionNameBin) -> binary_to_atom(CompressionNameBin, utf8) end, Choice),
     case lists:member(lz4, SupportedCompression) andalso module_exists(lz4) of
         true -> lz4;
         _ -> case lists:member(snappy, SupportedCompression) andalso module_exists(snappy) of

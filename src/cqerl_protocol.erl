@@ -618,18 +618,18 @@ decode_response_term(#cqerl_frame{opcode=?CQERL_OP_RESULT}, << 5:?INT, Body/bina
 
 decode_response_term(#cqerl_frame{opcode=?CQERL_OP_EVENT}, Body) ->
     {ok, EventNameBin, Rest0} = ?DATA:decode_string(Body),
-    EventName = binary_to_atom(EventNameBin, latin1),
+    EventName = binary_to_atom(EventNameBin, utf8),
     if
         EventName == ?CQERL_EVENT_TOPOLOGY_CHANGE orelse
         EventName == ?CQERL_EVENT_STATUS_CHANGE ->
             {ok, TopologyChangeName, Rest1} = ?DATA:decode_string(Rest0),
-            TopologyChangeType = binary_to_atom(TopologyChangeName, latin1),
+            TopologyChangeType = binary_to_atom(TopologyChangeName, utf8),
             {ok, ChangedNodeInet, _Rest} = ?DATA:decode_inet(Rest1),
             {ok, {EventName, {TopologyChangeType, ChangedNodeInet}}};
 
         EventName == ?CQERL_EVENT_SCHEMA_CHANGE ->
             {ok, SchemaChangeName, Rest1} = ?DATA:decode_string(Rest0),
-            SchemaChangeType = binary_to_atom(SchemaChangeName, latin1),
+            SchemaChangeType = binary_to_atom(SchemaChangeName, utf8),
             {ok, KeySpaceName, Rest2} = ?DATA:decode_string(Rest1),
             {ok, TableName, _Rest} = ?DATA:decode_string(Rest2),
             {ok, {EventName, {SchemaChangeType, KeySpaceName, TableName}}}

@@ -106,7 +106,7 @@ map_test() ->
   Proplist = [{foo, <<"bar">>}, {<<"Hello, ">>, <<"World!">>}, {"Another", <<"one">>}],
   {ok, EncodedMap} = cqerl_datatypes:encode_proplist_to_map(Proplist),
   CumulLength = lists:foldl(fun
-    ({Key, Value}, Sum) when is_atom(Key) -> Sum + size(atom_to_binary(Key, latin1)) 
+    ({Key, Value}, Sum) when is_atom(Key) -> Sum + size(atom_to_binary(Key, utf8)) 
                                               + ?SHORT_LENGTH + size(Value) + ?SHORT_LENGTH;
     ({Key, Value}, Sum) when is_list(Key) -> Sum + size(list_to_binary(Key)) 
                                               + ?SHORT_LENGTH + size(Value) + ?SHORT_LENGTH;
@@ -117,7 +117,7 @@ map_test() ->
   % Verify correct reversibility
   ReverseList = lists:map(fun
     ({String, Value}) when is_list(String) -> {list_to_atom(String), Value};
-    ({String, Value}) when is_binary(String) -> {binary_to_atom(String, latin1), Value};
+    ({String, Value}) when is_binary(String) -> {binary_to_atom(String, utf8), Value};
     (Other) -> Other
   end, Proplist),
   {ok, ReverseList, <<>>} = cqerl_datatypes:decode_map_to_proplist(EncodedMap).
@@ -136,7 +136,7 @@ multimap_test() ->
     end, 0, StringList) + ?SHORT_LENGTH
   end,
   CumulLength = lists:foldl(fun
-    ({Key, ValueList}, Sum) when is_atom(Key) -> Sum + size(atom_to_binary(Key, latin1)) 
+    ({Key, ValueList}, Sum) when is_atom(Key) -> Sum + size(atom_to_binary(Key, utf8)) 
                                               + ?SHORT_LENGTH + StringListLength(ValueList);
     ({Key, ValueList}, Sum) when is_list(Key) -> Sum + size(list_to_binary(Key)) 
                                               + ?SHORT_LENGTH + StringListLength(ValueList);
@@ -153,7 +153,7 @@ multimap_test() ->
   end,
   ReverseList = lists:map(fun
     ({String, Value}) when is_list(String) -> {list_to_atom(String), StandardizeList(Value)};
-    ({String, Value}) when is_binary(String) -> {binary_to_atom(String, latin1), StandardizeList(Value)};
+    ({String, Value}) when is_binary(String) -> {binary_to_atom(String, utf8), StandardizeList(Value)};
     (Other) -> Other
   end, Proplist),
   

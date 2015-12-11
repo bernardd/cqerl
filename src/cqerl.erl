@@ -479,7 +479,7 @@ node_key(Inet0, Keyspace0) ->
     Keyspace1 = case Keyspace of
         Val when is_atom(Val) -> Val;
         Val when is_list(Val) -> list_to_atom(Val);
-        Val when is_binary(Val) -> binary_to_atom(Val, latin1)
+        Val when is_binary(Val) -> binary_to_atom(Val, utf8)
     end,
     {Ip, Port, Keyspace1}.
 
@@ -649,4 +649,4 @@ pool_from_node({ Addr, Port, Keyspace }) when is_list(Port) ->
 pool_from_node({ Addr, Port, Keyspace }) when is_binary(Port) ->
     pool_from_node({ Addr, binary_to_list(Port), Keyspace });
 pool_from_node(Node = { Addr, Port, Keyspace }) when is_tuple(Addr) orelse is_list(Addr), is_integer(Port), is_atom(Keyspace) ->
-    binary_to_atom(base64:encode(term_to_binary(Node)), latin1).
+    binary_to_atom(base64:encode(term_to_binary(Node)), utf8).

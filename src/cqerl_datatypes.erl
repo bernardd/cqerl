@@ -115,7 +115,7 @@ encode_proplist_to_map(PropList) ->
     Length = length(IOList),
     {ok, << Length:?SHORT, Binary/binary >>}.
 
-to_binary(Atom) when is_atom(Atom) -> atom_to_binary(Atom, latin1);
+to_binary(Atom) when is_atom(Atom) -> atom_to_binary(Atom, utf8);
 to_binary(List) when is_list(List) -> list_to_binary(List);
 to_binary(Binary) when is_binary(Binary) -> Binary.
 
@@ -149,7 +149,7 @@ encode_proplist_to_multimap([], Acc) ->
 
 encode_proplist_to_multimap([{Key, Value}|Rest], Acc) when is_list(Value) ->
     KeyBin0 = case Key of
-        Atom when is_atom(Atom) -> atom_to_binary(Atom, latin1);
+        Atom when is_atom(Atom) -> atom_to_binary(Atom, utf8);
         String when is_list(String) -> list_to_binary(String);
         String when is_binary(String) -> String
     end,
@@ -293,7 +293,7 @@ encode_data({ascii, Data}, _Query) when is_list(Data) ->
     end;
 
 encode_data({ascii, Atom}, _Query) when is_atom(Atom) ->
-    atom_to_binary(Atom, latin1);
+    atom_to_binary(Atom, utf8);
 
 encode_data({ascii, Data}, _Query) when is_binary(Data) ->
     Data;
