@@ -50,9 +50,52 @@
 
 -opaque client() :: {pid(), reference()}.
 
--type inet() :: { inet:ip_address() | string(), Port :: integer() }.
+-type consistency_level() :: any
+                           | one
+                           | two
+                           | three
+                           | quorum
+                           | all
+                           | local_quorum
+                           | each_quorum
+                           | serial
+                           | local_serial
+                           | local_one
+                           | integer(). % backward compatibility
 
--export_type([client/0, inet/0]).
+-type serial_consistency() :: serial | local_serial.
+-type batch_mode() :: logged | unlogged | counter | integer().
+
+-type compression_type() :: lz4 | snappy | undefined.
+-type column_type() :: {custom, binary()}
+                     | {map, column_type(), column_type()}
+                     | {set | list, column_type()}
+                     | datatype().
+
+-type datatype() :: ascii
+                  | bigint
+                  | blob
+                  | boolean
+                  | counter
+                  | decimal
+                  | double
+                  | float
+                  | int
+                  | timestamp
+                  | uuid
+                  | varchar
+                  | varint
+                  | timeuuid
+                  | inet.
+
+-type parameter_val() :: number() | binary() | list() | atom() | boolean().
+-type parameter() :: {datatype(), parameter_val()}.
+-type named_parameter() :: {atom(), parameter_val()}.
+-type inet() :: {inet:ip_address() | string(), Port :: integer()}.
+
+-export_type([client/0, inet/0, consistency_level/0, serial_consistency/0,
+              batch_mode/0, compression_type/0, column_type/0, datatype/0,
+              parameter_val/0, parameter/0, named_parameter/0]).
 
 -define(SEED, {erlang:unique_integer([positive]), erlang:unique_integer([positive]), erlang:unique_integer([positive])}).
 

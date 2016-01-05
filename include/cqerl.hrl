@@ -30,24 +30,10 @@
     false -> inet_parse:address(Addr)
   end).
 
--type consistency_level() :: any | one | two | three | quorum | all | local_quorum | each_quorum | serial | local_serial | local_one.
--type serial_consistency() :: serial | local_serial.
--type batch_mode() :: logged | unlogged | counter.
--type column_type() ::
-  {custom, binary()} |
-  {map, column_type(), column_type()} |
-  {set | list, column_type()} | datatype().
-
--type datatype() :: ascii | bigint | blob | boolean | counter | decimal | double | 
-                    float | int | timestamp | uuid | varchar | varint | timeuuid | inet.
-  
--type parameter_val() :: number() | binary() | list() | atom() | boolean().
--type parameter() :: { datatype(), parameter_val() }.
--type named_parameter() :: { atom(), parameter_val() }.
 
 -record(cql_query, {
     statement   = <<>>      :: iodata(),
-    values      = []        :: [ parameter() | named_parameter() ],
+    values      = []        :: [ cqerl:parameter() | cqerl:named_parameter() ],
 
     reusable    = undefined :: undefined | boolean(),
     named       = false     :: boolean(),
@@ -55,8 +41,8 @@
     page_size   = 100       :: integer(),
     page_state              :: binary() | undefined,
     
-    consistency = one :: consistency_level(),
-    serial_consistency = undefined :: serial_consistency() | undefined,
+    consistency = one :: cqerl:consistency_level(),
+    serial_consistency = undefined :: cqerl:serial_consistency() | undefined,
 
     value_encode_handler = undefined :: function() | undefined
 }).
@@ -68,8 +54,8 @@
 }).
 
 -record(cql_query_batch, {
-    consistency         = one :: consistency_level(),
-    mode                = logged :: batch_mode() | integer(),
+    consistency         = one :: cqerl:consistency_level(),
+    mode                = logged :: cqerl:batch_mode(),
     queries             = [] :: list(tuple())
 }).
 

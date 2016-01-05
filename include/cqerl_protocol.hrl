@@ -22,11 +22,9 @@
 
 -include("cqerl.hrl").
 
--type compression_type() :: lz4 | snappy | undefined.
-
 -record(cqerl_frame, {
     compression = false           :: boolean(),
-    compression_type = undefined  :: compression_type(),
+    compression_type = undefined  :: cqerl:compression_type(),
     tracing = false               :: boolean(),
     opcode                        :: integer(),
     stream_id = 0                 :: integer()
@@ -34,15 +32,15 @@
 
 -record(cqerl_startup_options, {
     cql_version = <<"3.0.0">> :: binary(),
-    compression = undefined   :: compression_type()
+    compression = undefined   :: cqerl:compression_type()
 }).
 
 -record(cqerl_query_parameters, {
-    consistency         = any :: any | one | two | three | quorum | all | local_quorum | each_quorum | serial | local_serial | integer(),
+    consistency         = any :: cqerl:consistency_level(),
     skip_metadata       = false :: boolean(),
     page_state          = undefined :: binary() | undefined,
     page_size           = undefined :: integer() | undefined,
-    serial_consistency  = undefined :: serial | local_serial | undefined | integer()
+    serial_consistency  = undefined :: cqerl:serial_consistency() | undefined
 }).
 
 -record(cqerl_query, {
@@ -55,7 +53,7 @@
     keyspace = <<>>        :: binary(),
     table_name = <<>>      :: binary(),
     name = undefined       :: atom(),
-    type = undefined       :: column_type()
+    type = undefined       :: cqerl:column_type()
 }).
 
 -record(cqerl_result_metadata, {
